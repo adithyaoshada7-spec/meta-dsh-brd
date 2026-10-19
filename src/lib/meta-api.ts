@@ -12,6 +12,7 @@ export async function fetchMetaAdAccounts(): Promise<{
   isMock: boolean;
 }> {
   const token = process.env.META_ACCESS_TOKEN;
+  const apiVersion = process.env.META_API_VERSION || 'v25.0';
   const useMock = process.env.USE_MOCK_DATA === 'true' || !token;
 
   if (useMock) {
@@ -23,7 +24,7 @@ export async function fetchMetaAdAccounts(): Promise<{
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/me/adaccounts?fields=id,name,account_id&access_token=${token}`,
+      `https://graph.facebook.com/${apiVersion}/me/adaccounts?fields=id,name,account_id&access_token=${token}`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) {
@@ -52,7 +53,7 @@ export async function fetchMetaCampaigns(
   error?: string;
 }> {
   const token = process.env.META_ACCESS_TOKEN;
-  const apiVersion = process.env.META_API_VERSION || 'v21.0';
+  const apiVersion = process.env.META_API_VERSION || 'v25.0';
   const defaultAccountId = process.env.META_AD_ACCOUNT_ID || 'act_1397457568798633';
   const useMock = process.env.USE_MOCK_DATA === 'true' || !token;
 
@@ -249,6 +250,7 @@ export async function fetchMetaPages(requestedAccountId?: string): Promise<{
   error?: string;
 }> {
   const token = process.env.META_ACCESS_TOKEN;
+  const apiVersion = process.env.META_API_VERSION || 'v25.0';
   const useMock = process.env.USE_MOCK_DATA === 'true' || !token;
 
   if (useMock) {
@@ -269,7 +271,7 @@ export async function fetchMetaPages(requestedAccountId?: string): Promise<{
 
   try {
     for (const act of targetAccounts) {
-      const url = `https://graph.facebook.com/v21.0/${act.id}/promote_pages?fields=id,name,picture&access_token=${token}`;
+      const url = `https://graph.facebook.com/${apiVersion}/${act.id}/promote_pages?fields=id,name,picture&access_token=${token}`;
       const res = await fetch(url, { next: { revalidate: 3600 } });
       if (res.ok) {
         const data = await res.json();
