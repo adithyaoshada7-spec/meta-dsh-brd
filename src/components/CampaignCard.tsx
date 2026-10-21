@@ -58,7 +58,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
         </div>
 
         {/* Campaign Name & Page */}
-        <h3 className="mt-3 text-base font-semibold text-white line-clamp-1" title={campaign.name}>
+        <h3 className="mt-3 text-base font-semibold text-white break-words leading-snug" title={campaign.name}>
           {campaign.name}
         </h3>
           <div className="mt-1 flex items-center justify-between text-xs text-zinc-400">
