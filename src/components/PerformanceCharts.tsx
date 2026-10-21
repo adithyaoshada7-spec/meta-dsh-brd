@@ -77,7 +77,7 @@ export function PerformanceCharts({ campaigns }: PerformanceChartsProps) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
               <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
-              <YAxis yAxisId="left" stroke="#71717a" fontSize={11} tickLine={false} tickFormatter={(v) => `$${v}`} />
+              <YAxis yAxisId="left" stroke="#71717a" fontSize={11} tickLine={false} tickFormatter={(v) => `LKR ${v}`} />
               <YAxis yAxisId="right" orientation="right" stroke="#71717a" fontSize={11} tickLine={false} />
               <Tooltip
                 contentStyle={{
@@ -127,7 +127,7 @@ export function PerformanceCharts({ campaigns }: PerformanceChartsProps) {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={objectiveSpendData} layout="vertical" margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
-              <XAxis type="number" stroke="#71717a" fontSize={11} tickFormatter={(v) => `$${v}`} tickLine={false} />
+              <XAxis type="number" stroke="#71717a" fontSize={11} tickFormatter={(v) => `LKR ${v}`} tickLine={false} />
               <YAxis dataKey="name" type="category" stroke="#a1a1aa" fontSize={11} tickLine={false} width={80} />
               <Tooltip
                 contentStyle={{

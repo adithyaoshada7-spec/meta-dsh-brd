@@ -80,6 +80,7 @@ export interface MetaAdAccount {
   id: string;
   name: string;
   account_id: string;
+  currency?: string;
 }
 
 export interface Campaign {
@@ -94,6 +95,7 @@ export interface Campaign {
   createdAt: string;
   adAccountId?: string;
   adAccountName?: string;
+  currency?: string;
   pageId?: string;
   pageName?: string;
   deliveryStatus?: 'DELIVERING' | 'COMPLETED' | 'INACTIVE';

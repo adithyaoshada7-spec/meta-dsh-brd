@@ -2,9 +2,9 @@ import { Campaign, MetaPage, MetaAdAccount } from '@/types/campaign';
 import { mockCampaigns, mockPages } from './mock-data';
 
 export const KNOWN_ACCOUNTS: MetaAdAccount[] = [
-  { id: 'act_1397457568798633', account_id: '1397457568798633', name: 'Faith and hope' },
-  { id: 'act_807839915453401', account_id: '807839915453401', name: 'Poru Ads' },
-  { id: 'act_1091726590095051', account_id: '1091726590095051', name: 'Tantri' },
+  { id: 'act_1397457568798633', account_id: '1397457568798633', name: 'Faith and hope', currency: 'LKR' },
+  { id: 'act_807839915453401', account_id: '807839915453401', name: 'Poru Ads', currency: 'LKR' },
+  { id: 'act_1091726590095051', account_id: '1091726590095051', name: 'Tantri', currency: 'LKR' },
 ];
 
 export async function fetchMetaAdAccounts(): Promise<{
@@ -24,7 +24,7 @@ export async function fetchMetaAdAccounts(): Promise<{
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/${apiVersion}/me/adaccounts?fields=id,name,account_id&access_token=${token}`,
+      `https://graph.facebook.com/${apiVersion}/me/adaccounts?fields=id,name,account_id,currency&access_token=${token}`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) {
@@ -35,6 +35,7 @@ export async function fetchMetaAdAccounts(): Promise<{
       id: a.id,
       name: a.name.trim(),
       account_id: a.account_id,
+      currency: a.currency || 'LKR',
     }));
     return { accounts: accounts.length > 0 ? accounts : KNOWN_ACCOUNTS, isMock: false };
   } catch (err) {
@@ -71,7 +72,7 @@ export async function fetchMetaCampaigns(
       ? requestedAccountId
       : `act_${requestedAccountId}`;
     const found = KNOWN_ACCOUNTS.find((a) => a.id === formattedId);
-    targetAccounts = [found || { id: formattedId, name: formattedId, account_id: formattedId.replace('act_', '') }];
+    targetAccounts = [found || { id: formattedId, name: formattedId, account_id: formattedId.replace('act_', ''), currency: 'LKR' }];
   } else if (requestedAccountId === 'ALL') {
     targetAccounts = KNOWN_ACCOUNTS;
   } else {
@@ -79,7 +80,7 @@ export async function fetchMetaCampaigns(
       ? defaultAccountId
       : `act_${defaultAccountId}`;
     const found = KNOWN_ACCOUNTS.find((a) => a.id === formattedId);
-    targetAccounts = [found || { id: formattedId, name: 'Default Account', account_id: formattedId.replace('act_', '') }];
+    targetAccounts = [found || { id: formattedId, name: 'Default Account', account_id: formattedId.replace('act_', ''), currency: 'LKR' }];
   }
 
   // Construct insights time range filter
@@ -205,6 +206,7 @@ export async function fetchMetaCampaigns(
           createdAt: item.created_time?.split('T')[0] || new Date().toISOString().split('T')[0],
           adAccountId: act.id,
           adAccountName: act.name,
+          currency: act.currency || 'LKR',
           pageId: detectedPageId,
           pageName: detectedPageName,
           ads: item.ads,
