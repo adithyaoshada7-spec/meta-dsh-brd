@@ -180,6 +180,10 @@ export async function fetchMetaCampaigns(
           detectedPageName = 'poru.flore';
         } else if (detectedPageId === '210332835652476') {
           detectedPageName = 'TANTRI';
+        } else if (detectedPageId === '108375665218357') {
+          detectedPageName = 'ICC Engineering Solutions';
+        } else if (detectedPageId === '207216032642582') {
+          detectedPageName = 'International Construction Consortium';
         }
 
         // Check live delivery status vs schedule
@@ -260,10 +264,12 @@ export async function fetchMetaPages(requestedAccountId?: string): Promise<{
     return { pages: mockPages, isMock: true };
   }
 
-  // Pre-seed with known pages across these 3 accounts
+  // Pre-seed with known pages across accounts
   const pageMap = new Map<string, MetaPage>();
   pageMap.set('123625740839340', { id: '123625740839340', name: 'poru.flore' });
   pageMap.set('210332835652476', { id: '210332835652476', name: 'TANTRI' });
+  pageMap.set('108375665218357', { id: '108375665218357', name: 'ICC Engineering Solutions' });
+  pageMap.set('207216032642582', { id: '207216032642582', name: 'International Construction Consortium' });
 
   // Query promote_pages for target accounts
   let targetAccounts = KNOWN_ACCOUNTS;
