@@ -189,7 +189,7 @@ export default function DashboardPage() {
                   Meta Ads Performance Dashboard
                 </h1>
                 <p className="text-xs text-zinc-400">
-                  Multi-account monitor: Faith and hope, Poru Ads & Tantri
+                  Multi-account monitor: Faith and hope, Poru Ads, Tantri & ICC-F&H Ads
                 </p>
               </div>
             </div>

@@ -5,6 +5,7 @@ export const KNOWN_ACCOUNTS: MetaAdAccount[] = [
   { id: 'act_1397457568798633', account_id: '1397457568798633', name: 'Faith and hope', currency: 'LKR' },
   { id: 'act_807839915453401', account_id: '807839915453401', name: 'Poru Ads', currency: 'LKR' },
   { id: 'act_1091726590095051', account_id: '1091726590095051', name: 'Tantri', currency: 'LKR' },
+  { id: 'act_1863700484241733', account_id: '1863700484241733', name: 'ICC-F&H Ads', currency: 'LKR' },
 ];
 
 export async function fetchMetaAdAccounts(): Promise<{
