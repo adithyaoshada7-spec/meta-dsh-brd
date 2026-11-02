@@ -1,6 +1,29 @@
 import { Campaign, MetaPage, MetaAdAccount } from '@/types/campaign';
 import { mockCampaigns, mockPages } from './mock-data';
 
+// List of account IDs or name substrings to exclude (personal accounts)
+export const EXCLUDED_ACCOUNT_IDS = new Set([
+  'act_1174521930839037',
+  'act_794821426420462',
+  'act_1809486486849160',
+  'act_2498821890563847',
+  '1174521930839037',
+  '794821426420462',
+  '1809486486849160',
+  '2498821890563847',
+]);
+
+export function isPersonalAccount(account: { id: string; name: string; account_id?: string }): boolean {
+  if (EXCLUDED_ACCOUNT_IDS.has(account.id) || (account.account_id && EXCLUDED_ACCOUNT_IDS.has(account.account_id))) {
+    return true;
+  }
+  const cleanName = (account.name || '').trim().toLowerCase();
+  if (cleanName.includes('oshada') || cleanName.includes('adithya') || cleanName.startsWith('249882189056384')) {
+    return true;
+  }
+  return false;
+}
+
 export const KNOWN_ACCOUNTS: MetaAdAccount[] = [
   { id: 'act_1397457568798633', account_id: '1397457568798633', name: 'Faith and hope', currency: 'LKR' },
   { id: 'act_807839915453401', account_id: '807839915453401', name: 'Poru Ads', currency: 'LKR' },
@@ -32,12 +55,14 @@ export async function fetchMetaAdAccounts(): Promise<{
       return { accounts: KNOWN_ACCOUNTS, isMock: false };
     }
     const data = await res.json();
-    const accounts: MetaAdAccount[] = (data.data || []).map((a: any) => ({
-      id: a.id,
-      name: a.name.trim(),
-      account_id: a.account_id,
-      currency: a.currency || 'LKR',
-    }));
+    const accounts: MetaAdAccount[] = (data.data || [])
+      .filter((a: any) => !isPersonalAccount(a))
+      .map((a: any) => ({
+        id: a.id,
+        name: a.name.trim(),
+        account_id: a.account_id,
+        currency: a.currency || 'LKR',
+      }));
     return { accounts: accounts.length > 0 ? accounts : KNOWN_ACCOUNTS, isMock: false };
   } catch (err) {
     return { accounts: KNOWN_ACCOUNTS, isMock: false };
@@ -72,10 +97,14 @@ export async function fetchMetaCampaigns(
     const formattedId = requestedAccountId.startsWith('act_')
       ? requestedAccountId
       : `act_${requestedAccountId}`;
-    const found = KNOWN_ACCOUNTS.find((a) => a.id === formattedId);
-    targetAccounts = [found || { id: formattedId, name: formattedId, account_id: formattedId.replace('act_', ''), currency: 'LKR' }];
+    if (!EXCLUDED_ACCOUNT_IDS.has(formattedId)) {
+      const found = KNOWN_ACCOUNTS.find((a) => a.id === formattedId);
+      targetAccounts = [found || { id: formattedId, name: formattedId, account_id: formattedId.replace('act_', ''), currency: 'LKR' }];
+    }
   } else if (requestedAccountId === 'ALL') {
-    targetAccounts = KNOWN_ACCOUNTS;
+    // Exclude personal accounts when aggregating ALL
+    const liveAccountsRes = await fetchMetaAdAccounts();
+    targetAccounts = liveAccountsRes.accounts.filter((a) => !isPersonalAccount(a));
   } else {
     const formattedId = defaultAccountId.startsWith('act_')
       ? defaultAccountId
