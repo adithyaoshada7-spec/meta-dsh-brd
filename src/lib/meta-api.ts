@@ -138,7 +138,9 @@ export async function fetchMetaCampaigns(
   try {
     for (const act of targetAccounts) {
       const url = `https://graph.facebook.com/${apiVersion}/${act.id}/campaigns?effective_status=['ACTIVE']&fields=${fields}&limit=100&access_token=${token}`;
-      const res = await fetch(url, { next: { revalidate: 300 } });
+      // Today සහ Yesterday නිතර වෙනස් වන නිසා revalidate කාලය තත්පර 10ක් කරන්න, අනෙක්වට තත්පර 120ක්
+      const revalidateSecs = (datePreset === 'today' || datePreset === 'yesterday') ? 10 : 120;
+      const res = await fetch(url, { next: { revalidate: revalidateSecs } });
       if (!res.ok) {
         continue;
       }
